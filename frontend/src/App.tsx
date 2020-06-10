@@ -1,13 +1,15 @@
-import React from 'react'
+import React from "react";
+
+import Routes from "./routes";
+
+import Layout from "./components/Layout";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>2SOW</h1>
-      </header>
-    </div>
-  );
+    return (
+        <Layout>
+            <Routes />
+        </Layout>
+    );
 }
 
 export default App;
