@@ -1,0 +1,16 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "json-server --watch db.json --delay 2000 --port 5000"
+    },
+    "author": {
+        "name": "Henrique Pereira",
+        "email": "henriquepbdev@gmail.com"
+    },
+    "dependencies": {
+        "json-server": "^0.16.1"
+    }
+}
