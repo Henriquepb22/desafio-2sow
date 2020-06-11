@@ -9,7 +9,7 @@ const Layout: React.FC = ({ children }) => {
         <S.LayoutWrapper>
             <GlobalStyles />
             <Header />
-            {children}
+            <S.ContentContainer>{children}</S.ContentContainer>
         </S.LayoutWrapper>
     );
 };
