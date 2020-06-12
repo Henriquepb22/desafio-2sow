@@ -45,16 +45,20 @@ const Dashboard: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {loading
-                        ? "Carregado..."
-                        : usuarios.map((usuario) => (
-                              <tr key={usuario.cpf}>
-                                  <td>{usuario.nome}</td>
-                                  <td>{usuario.cpf}</td>
-                                  <td>{usuario.email}</td>
-                                  <td>{usuario.endereco.cidade}</td>
-                              </tr>
-                          ))}
+                    {loading ? (
+                        <tr>
+                            <td>Carregado...</td>
+                        </tr>
+                    ) : (
+                        usuarios.map((usuario) => (
+                            <tr key={usuario.cpf}>
+                                <td>{usuario.nome}</td>
+                                <td>{usuario.cpf}</td>
+                                <td>{usuario.email}</td>
+                                <td>{usuario.endereco.cidade}</td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

@@ -1,8 +1,9 @@
-import React, { useState, FormEvent } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import api from "../../services/api";
+import axios from "axios";
 
 const SignupForm: React.FC = () => {
     const [nome, setNome] = useState("");
@@ -14,6 +15,23 @@ const SignupForm: React.FC = () => {
     const [bairro, setBairro] = useState("");
     const [cidade, setCidade] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        async function handleAddress() {
+            const formatedCep = cep.replace("-", "");
+
+            if (formatedCep.match(/^[0-9]{8}$/)) {
+                await axios
+                    .get(`https://viacep.com.br/ws/${formatedCep}/json`)
+                    .then((resp) => {
+                        setRua(resp.data.logradouro);
+                        setBairro(resp.data.bairro);
+                        setCidade(resp.data.localidade);
+                    });
+            }
+        }
+        handleAddress();
+    }, [cep]);
 
     async function handleUser(e: FormEvent) {
         e.preventDefault();
