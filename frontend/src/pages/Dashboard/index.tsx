@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import api from "../../services/api";
+
+type Usuario = {
+    nome: string;
+    cpf: string;
+    email: string;
+    endereco: Endereco;
+};
+
+type Endereco = {
+    cep: string;
+    rua: string;
+    numero: string;
+    bairro: string;
+    cidade: string;
+};
 
 const Dashboard: React.FC = () => {
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function loadUsers() {
+            await api.get("/usuarios").then((resp) => {
+                setUsuarios(resp.data);
+                setLoading(false);
+            });
+        }
+
+        loadUsers();
+    }, []);
+
     return (
         <div>
             <h1>Dashboard Page</h1>
@@ -10,24 +41,20 @@ const Dashboard: React.FC = () => {
                         <td>Nome</td>
                         <td>CPF</td>
                         <td>Email</td>
+                        <td>Cidade</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Teste</td>
-                        <td>123.123.123-12</td>
-                        <td>email@exemplo.com</td>
-                    </tr>
-                    <tr>
-                        <td>Teste</td>
-                        <td>123.123.123-12</td>
-                        <td>email@exemplo.com</td>
-                    </tr>
-                    <tr>
-                        <td>Teste</td>
-                        <td>123.123.123-12</td>
-                        <td>email@exemplo.com</td>
-                    </tr>
+                    {loading
+                        ? "Carregado..."
+                        : usuarios.map((usuario) => (
+                              <tr key={usuario.cpf}>
+                                  <td>{usuario.nome}</td>
+                                  <td>{usuario.cpf}</td>
+                                  <td>{usuario.email}</td>
+                                  <td>{usuario.endereco.cidade}</td>
+                              </tr>
+                          ))}
                 </tbody>
             </table>
         </div>
