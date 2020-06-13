@@ -1,4 +1,5 @@
 import React, { useEffect, useState, FormEvent } from "react";
+import MaskedInput from "react-text-mask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,15 +19,40 @@ const SignupForm: React.FC = () => {
 
     useEffect(() => {
         async function handleAddress() {
+            // Formata o cep digitado retirando o "-"
             const formatedCep = cep.replace("-", "");
+            const cepRegex = new RegExp(/^[0-9]{8}$/);
 
-            if (formatedCep.match(/^[0-9]{8}$/)) {
+            // Só executa a requisição caso o valor digitado seja de 8 números.
+            if (formatedCep.match(cepRegex)) {
                 await axios
                     .get(`https://viacep.com.br/ws/${formatedCep}/json`)
-                    .then((resp) => {
-                        setRua(resp.data.logradouro);
-                        setBairro(resp.data.bairro);
-                        setCidade(resp.data.localidade);
+                    .then((res) => {
+                        /* 
+                        De acordo com a documentação a requisição retorna um objeto 
+                        com uma propriedade chamada "erro" com valor true se o cep for inválido. 
+                        */
+                        if (res.data.erro) {
+                            const cepInput = document.getElementById(
+                                "cep"
+                            ) as HTMLInputElement;
+                            // Se o cep for inválido seleciona o cep digitado para alteração.
+                            cepInput.select();
+                            cepInput.focus();
+                            cepInput.setSelectionRange(
+                                0,
+                                cepInput.innerText.length - 1
+                            );
+                            return alert("CEP digitado inválido!");
+                        }
+                        /* 
+                        Caso o cep esteja correto adiciona os valores correspondentes aos campos
+                        de logradouro, bairro e cidade e muda o foco para o campo de número. 
+                        */
+                        setRua(res.data.logradouro);
+                        setBairro(res.data.bairro);
+                        setCidade(res.data.localidade);
+                        document.getElementById("numero")?.focus();
                     });
             }
         }
@@ -34,6 +60,10 @@ const SignupForm: React.FC = () => {
     }, [cep]);
 
     async function handleUser(e: FormEvent) {
+        /* 
+        Previne a página de recarregar e muda a 
+        propriedade de loading enquanto faz a requisição 
+        */
         e.preventDefault();
         setLoading(true);
 
@@ -50,8 +80,12 @@ const SignupForm: React.FC = () => {
                     cidade,
                 },
             })
-            .then((resp) => {
-                if (resp.status === 201) {
+            .then((res) => {
+                /* 
+                Caso não haja nenhum erro com a api e os dados sejam salvos
+                exibe um toast, limpa os campos e muda a propriedade loading. 
+                */
+                if (res.status === 201) {
                     toast.success(`${nome} cadastrado com sucesso!`, {
                         autoClose: 2000,
                     });
@@ -60,6 +94,7 @@ const SignupForm: React.FC = () => {
                 }
             })
             .catch((err) => {
+                // Caso haja um erro na api retorna um toast com a mensagem de erro.
                 toast.error(err);
                 setLoading(false);
             });
@@ -96,6 +131,7 @@ const SignupForm: React.FC = () => {
                     id="cpf"
                     placeholder="Insira seu CPF"
                     value={cpf}
+                    maxLength={11}
                     onChange={(e) => setCpf(e.target.value)}
                     required
                 />
@@ -112,10 +148,11 @@ const SignupForm: React.FC = () => {
             <fieldset>
                 <legend>Endereço:</legend>
                 <label htmlFor="cep">CEP:</label>
-                <input
+                <MaskedInput
+                    mask={[/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/]}
                     type="text"
                     id="cep"
-                    placeholder="00000-000"
+                    placeholder="Ex: 12345-678"
                     value={cep}
                     onChange={(e) => setCep(e.target.value)}
                     required
