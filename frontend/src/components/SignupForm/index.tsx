@@ -2,9 +2,9 @@ import React, { useEffect, useState, FormEvent } from "react";
 import MaskedInput from "react-text-mask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 import api from "../../services/api";
-import axios from "axios";
 
 const SignupForm: React.FC = () => {
     const [nome, setNome] = useState("");
