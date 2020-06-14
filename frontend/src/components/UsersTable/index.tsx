@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import api from "../../services/api";
+type TableProps = {
+    usuarios: Usuario[];
+};
 
 type Usuario = {
     nome: string;
@@ -17,21 +19,7 @@ type Endereco = {
     cidade: string;
 };
 
-const UsersTable: React.FC = () => {
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        async function loadUsers() {
-            await api.get("/usuarios").then((resp) => {
-                setUsuarios(resp.data);
-                setLoading(false);
-            });
-        }
-
-        loadUsers();
-    }, []);
-
+const UsersTable: React.FC<TableProps> = ({ usuarios }) => {
     return (
         <table>
             <thead>
@@ -43,20 +31,14 @@ const UsersTable: React.FC = () => {
                 </tr>
             </thead>
             <tbody>
-                {loading ? (
-                    <tr>
-                        <td>Carregado...</td>
+                {usuarios.map((usuario) => (
+                    <tr key={usuario.cpf}>
+                        <td>{usuario.nome}</td>
+                        <td>{usuario.cpf}</td>
+                        <td>{usuario.email}</td>
+                        <td>{usuario.endereco.cidade}</td>
                     </tr>
-                ) : (
-                    usuarios.map((usuario) => (
-                        <tr key={usuario.cpf}>
-                            <td>{usuario.nome}</td>
-                            <td>{usuario.cpf}</td>
-                            <td>{usuario.email}</td>
-                            <td>{usuario.endereco.cidade}</td>
-                        </tr>
-                    ))
-                )}
+                ))}
             </tbody>
         </table>
     );
