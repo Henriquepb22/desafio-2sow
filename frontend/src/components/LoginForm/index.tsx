@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import userContext from "../../store/userContext";
 
 const LoginForm: React.FC = () => {
+    const user = useContext(userContext);
+
+    function handleLogin(e: React.FormEvent) {
+        e.preventDefault();
+        console.log(user);
+    }
+
     return (
-        <form>
+        <form onSubmit={(e) => handleLogin(e)}>
             <fieldset>
                 <label htmlFor="email">E-mail:</label>
                 <input

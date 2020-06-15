@@ -16,7 +16,7 @@ const Header: React.FC = () => {
                         <Link to="/signup">Adicionar Usuário</Link>
                     </S.HeaderLinks>
                     <S.HeaderLinks>
-                        <Link to="/">Logout</Link>
+                        <Link to="/">Login</Link>
                     </S.HeaderLinks>
                 </S.HeaderList>
             </S.HeaderNav>
