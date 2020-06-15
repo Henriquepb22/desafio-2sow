@@ -28,6 +28,7 @@ const UsersTable: React.FC<TableProps> = ({ usuarios }) => {
                     <td>CPF</td>
                     <td>Email</td>
                     <td>Cidade</td>
+                    <td>Ações</td>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +38,8 @@ const UsersTable: React.FC<TableProps> = ({ usuarios }) => {
                         <td>{usuario.cpf}</td>
                         <td>{usuario.email}</td>
                         <td>{usuario.endereco.cidade}</td>
+                        <td>Editar</td>
+                        <td>Excluir</td>
                     </tr>
                 ))}
             </tbody>

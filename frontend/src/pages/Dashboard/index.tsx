@@ -21,39 +21,94 @@ type Endereco = {
 
 const Dashboard = () => {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-    const [searchName, setSearchName] = useState("");
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
+    const [searchName, setSearchName] = useState("");
+    const [isFiltered, setIsFiltered] = useState(false);
+    const [actualPage, setActualPage] = useState(1);
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
-        setLoading(true);
+        //Carrega a primeira página da lista no carregamento da página
+        loadUsers(1);
+    }, []);
 
-        async function loadUsers() {
-            await api.get(`/usuarios?_page=${page}`).then((res) => {
+    //Carrega todos os usuários
+    async function loadUsers(page: number) {
+        setLoading(true);
+        await api.get(`/usuarios?&_page=${page}`).then((res) => {
+            setUsuarios(res.data);
+            setLoading(false);
+            setTotal(Number(res.headers["x-total-count"]));
+        });
+    }
+
+    //Carrega apenas os usuários do filtro
+    async function loadFilteredUsers(page: number) {
+        setLoading(true);
+        await api
+            .get(`/usuarios?nome_like=${searchName}&_page=${page}`)
+            .then((res) => {
+                setIsFiltered(true);
                 setUsuarios(res.data);
                 setLoading(false);
                 setTotal(Number(res.headers["x-total-count"]));
             });
-        }
+    }
 
-        loadUsers();
-    }, [page]);
-
-    async function searchUser(e: React.FormEvent, name: string) {
+    //Busca os usuários filtrando pelo nome digitado
+    function searchUser(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setLoading(true);
-        await api.get(`/usuarios?nome_like=${name}`).then((res) => {
-            setUsuarios(res.data);
-            setLoading(false);
-            setSearchName("");
-        });
+        handleFirstPage();
+    }
+
+    //Limpa o filtro e retorna para a primeira página
+    function cleanFilter() {
+        setSearchName("");
+        loadUsers(1);
+        setActualPage(1);
+        setIsFiltered(false);
+    }
+
+    //Paginação
+    function handleFirstPage() {
+        const firstPage = 1;
+        setActualPage(1);
+        if (searchName === "") {
+            loadUsers(firstPage);
+        }
+        loadFilteredUsers(firstPage);
+    }
+
+    function handleLastPage() {
+        const lastPage =
+            total % 10 !== 0 ? Math.trunc(total / 10) + 1 : total / 10;
+        setActualPage(lastPage);
+        if (searchName === "") {
+            loadUsers(lastPage);
+        }
+        loadFilteredUsers(lastPage);
+    }
+
+    function handleNextPage() {
+        setActualPage(actualPage + 1);
+        if (searchName === "") {
+            loadUsers(actualPage + 1);
+        }
+        loadFilteredUsers(actualPage + 1);
+    }
+
+    function handlePrevPage() {
+        setActualPage(actualPage + 1);
+        if (searchName === "") {
+            loadUsers(actualPage - 1);
+        }
+        loadFilteredUsers(actualPage - 1);
     }
 
     return (
         <div>
             <h1>Lista de Usuários</h1>
-            <form onSubmit={(e) => searchUser(e, searchName)}>
+            <form onSubmit={(e) => searchUser(e)}>
                 <label htmlFor="search">Buscar por nome:</label>
                 <input
                     type="text"
@@ -63,37 +118,55 @@ const Dashboard = () => {
                     onChange={(e) => setSearchName(e.target.value)}
                     required
                 />
+                <button type="submit" disabled={loading}>
+                    Buscar
+                </button>
+                <button
+                    type="reset"
+                    disabled={loading || !isFiltered}
+                    onClick={cleanFilter}
+                >
+                    Limpar Filtro
+                </button>
             </form>
             {loading ? (
                 <h2>Carregando...</h2>
             ) : (
                 <UsersTable usuarios={usuarios} />
             )}
-            <span>
-                Página {page} de {Math.trunc(total / 10 + 1)}
-            </span>
+            <div>
+                <span>
+                    Página {actualPage} de{" "}
+                    {total
+                        ? total % 10 !== 0
+                            ? Math.trunc(total / 10) + 1
+                            : total / 10
+                        : 1}
+                </span>
+                <span>Total de registros: {total}</span>
+            </div>
             <div>
                 <button
-                    disabled={page === 1 || loading}
-                    onClick={() => setPage(1)}
+                    disabled={actualPage === 1 || loading}
+                    onClick={handleFirstPage}
                 >
                     Primeira
                 </button>
                 <button
-                    disabled={page === 1 || loading}
-                    onClick={() => setPage(page - 1)}
+                    disabled={actualPage === 1 || loading}
+                    onClick={handlePrevPage}
                 >
                     Anterior
                 </button>
                 <button
-                    disabled={total / 10 <= page || loading}
-                    onClick={() => setPage(page + 1)}
+                    disabled={total / 10 <= actualPage || loading}
+                    onClick={handleNextPage}
                 >
                     Próxima
                 </button>
                 <button
-                    disabled={total / 10 <= page || loading}
-                    onClick={() => setPage(Math.trunc(total / 10 + 1))}
+                    disabled={total / 10 <= actualPage || loading}
+                    onClick={handleLastPage}
                 >
                     Última
                 </button>
