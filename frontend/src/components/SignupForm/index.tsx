@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FormEvent } from "react";
+import React, { useEffect, useState } from "react";
 import MaskedInput from "react-text-mask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -59,7 +59,7 @@ const SignupForm: React.FC = () => {
         handleAddress();
     }, [cep]);
 
-    async function handleUser(e: FormEvent) {
+    async function handleUser(e: React.FormEvent) {
         /* 
         Previne a página de recarregar e muda a 
         propriedade de loading enquanto faz a requisição 
