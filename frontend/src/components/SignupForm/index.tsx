@@ -4,6 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
+import useQuery from "../../utils/useQuery";
+
 import api from "../../services/api";
 
 const SignupForm: React.FC = () => {
@@ -16,6 +18,40 @@ const SignupForm: React.FC = () => {
     const [bairro, setBairro] = useState("");
     const [cidade, setCidade] = useState("");
     const [loading, setLoading] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const query = useQuery();
+    const userId = query.get("id");
+
+    useEffect(() => {
+        async function handleEdit() {
+            //Transforma a tela no modo de edição se receber algum id pela url
+            if (userId !== null) {
+                setIsEdit(true);
+                setLoading(true);
+                await api
+                    .get(`/usuarios/${userId}`)
+                    .then((res) => {
+                        setNome(res.data.nome);
+                        setCpf(res.data.cpf);
+                        setEmail(res.data.email);
+                        setCep(res.data.endereco.cep);
+                        setRua(res.data.endereco.rua);
+                        setNumero(res.data.endereco.numero);
+                        setBairro(res.data.endereco.bairro);
+                        setCidade(res.data.endereco.cidade);
+                        setLoading(false);
+                    })
+                    .catch(() => {
+                        toast.error("Usuário não encontrado", {
+                            autoClose: 2000,
+                        });
+                    });
+            }
+        }
+
+        handleEdit();
+    }, [userId]);
 
     useEffect(() => {
         async function handleAddress() {
@@ -67,19 +103,29 @@ const SignupForm: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
+        const userData = {
+            nome,
+            cpf,
+            email,
+            endereco: {
+                cep,
+                rua,
+                numero,
+                bairro,
+                cidade,
+            },
+        };
+
+        //Atualiza os dados do usuário com id igual ao recebido na url
+        if (isEdit) {
+            await api.put(`/usuarios/${userId}`, userData);
+            cleanFields();
+            return toast.success("Usuário alterado com sucesso!", {
+                autoClose: 2000,
+            });
+        }
         await api
-            .post("/usuarios", {
-                nome,
-                cpf,
-                email,
-                endereco: {
-                    cep,
-                    rua,
-                    numero,
-                    bairro,
-                    cidade,
-                },
-            })
+            .post("/usuarios", userData)
             .then((res) => {
                 /* 
                 Caso não haja nenhum erro com a api e os dados sejam salvos
@@ -93,9 +139,11 @@ const SignupForm: React.FC = () => {
                     setLoading(false);
                 }
             })
-            .catch((err) => {
+            .catch(() => {
                 // Caso haja um erro na api retorna um toast com a mensagem de erro.
-                toast.error(err);
+                toast.error("Ocorreu um erro no requisição, tente novamente", {
+                    autoClose: 2000,
+                });
                 setLoading(false);
             });
     }
@@ -195,7 +243,7 @@ const SignupForm: React.FC = () => {
                 />
             </fieldset>
             <button type="submit" disabled={loading}>
-                Cadastrar
+                {isEdit ? "Salvar" : "Cadastrar"}
             </button>
         </form>
     );

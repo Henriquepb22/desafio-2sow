@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 import UsersTable from "../../components/UsersTable";
 
 import api from "../../services/api";
 
 type Usuario = {
+    id: number;
     nome: string;
     cpf: string;
     email: string;
@@ -36,6 +38,7 @@ const Dashboard = () => {
     async function loadUsers(page: number) {
         setLoading(true);
         await api.get(`/usuarios?&_page=${page}`).then((res) => {
+            setActualPage(page);
             setUsuarios(res.data);
             setLoading(false);
             setTotal(Number(res.headers["x-total-count"]));
@@ -48,6 +51,7 @@ const Dashboard = () => {
         await api
             .get(`/usuarios?nome_like=${searchName}&_page=${page}`)
             .then((res) => {
+                setActualPage(page);
                 setIsFiltered(true);
                 setUsuarios(res.data);
                 setLoading(false);
@@ -55,7 +59,7 @@ const Dashboard = () => {
             });
     }
 
-    //Busca os usuários filtrando pelo nome digitado
+    //Retorna para a primeira página com o filtro adicionado
     function searchUser(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         handleFirstPage();
@@ -69,10 +73,22 @@ const Dashboard = () => {
         setIsFiltered(false);
     }
 
+    //Deleta o usuário do id recebido e volta para a primeira página
+    async function handleDelete(id: number, email: string) {
+        if (
+            window.confirm(`Confirmar exclusão do usuário com email ${email}?`)
+        ) {
+            setLoading(true);
+            await api.delete(`/usuarios/${id}`).then(() => {
+                toast.success("Excluído com sucesso!", { autoClose: 2000 });
+                loadUsers(1);
+            });
+        }
+    }
+
     //Paginação
     function handleFirstPage() {
         const firstPage = 1;
-        setActualPage(1);
         if (searchName === "") {
             loadUsers(firstPage);
         }
@@ -82,7 +98,6 @@ const Dashboard = () => {
     function handleLastPage() {
         const lastPage =
             total % 10 !== 0 ? Math.trunc(total / 10) + 1 : total / 10;
-        setActualPage(lastPage);
         if (searchName === "") {
             loadUsers(lastPage);
         }
@@ -90,7 +105,6 @@ const Dashboard = () => {
     }
 
     function handleNextPage() {
-        setActualPage(actualPage + 1);
         if (searchName === "") {
             loadUsers(actualPage + 1);
         }
@@ -98,7 +112,6 @@ const Dashboard = () => {
     }
 
     function handlePrevPage() {
-        setActualPage(actualPage + 1);
         if (searchName === "") {
             loadUsers(actualPage - 1);
         }
@@ -107,6 +120,7 @@ const Dashboard = () => {
 
     return (
         <div>
+            <ToastContainer />
             <h1>Lista de Usuários</h1>
             <form onSubmit={(e) => searchUser(e)}>
                 <label htmlFor="search">Buscar por nome:</label>
@@ -132,7 +146,11 @@ const Dashboard = () => {
             {loading ? (
                 <h2>Carregando...</h2>
             ) : (
-                <UsersTable usuarios={usuarios} />
+                <UsersTable
+                    usuarios={usuarios}
+                    onDelete={handleDelete}
+                    loading={loading}
+                />
             )}
             <div>
                 <span>

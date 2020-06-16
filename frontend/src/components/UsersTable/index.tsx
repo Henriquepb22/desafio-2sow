@@ -1,10 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 type TableProps = {
     usuarios: Usuario[];
+    onDelete: (id: number, email: string) => void;
+    loading: boolean;
 };
 
 type Usuario = {
+    id: number;
     nome: string;
     cpf: string;
     email: string;
@@ -19,7 +23,7 @@ type Endereco = {
     cidade: string;
 };
 
-const UsersTable: React.FC<TableProps> = ({ usuarios }) => {
+const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
     return (
         <table>
             <thead>
@@ -38,8 +42,19 @@ const UsersTable: React.FC<TableProps> = ({ usuarios }) => {
                         <td>{usuario.cpf}</td>
                         <td>{usuario.email}</td>
                         <td>{usuario.endereco.cidade}</td>
-                        <td>Editar</td>
-                        <td>Excluir</td>
+                        <td>
+                            <Link to={`/signup?id=${usuario.id}`}>Editar</Link>
+                        </td>
+                        <td>
+                            <button
+                                onClick={() =>
+                                    onDelete(usuario.id, usuario.email)
+                                }
+                                disabled={loading}
+                            >
+                                Excluir
+                            </button>
+                        </td>
                     </tr>
                 ))}
             </tbody>

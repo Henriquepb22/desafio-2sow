@@ -12,6 +12,10 @@ const Routes: React.FC = () => {
     const user = useContext(UserContext);
     const [loggedUser, setLoggedUser] = useState(user);
 
+    /* 
+        Só exibe as páginas se o usuário estiver logado,
+        se não redireciona para a página de login
+    */
     return (
         <BrowserRouter>
             <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
@@ -26,7 +30,7 @@ const Routes: React.FC = () => {
                     <Route path="/dashboard">
                         {loggedUser.nome ? <Dashboard /> : <Redirect to="/" />}
                     </Route>
-                    <Route path="/signup" component={Signup}>
+                    <Route path="/signup">
                         {loggedUser.nome ? <Signup /> : <Redirect to="/" />}
                     </Route>
                 </Layout>
