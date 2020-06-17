@@ -1,3 +1,17 @@
 {
-    "usuarios": []
+    "usuarios": [
+        {
+            "nome": "Usuário Teste",
+            "cpf": "123.456.789-12",
+            "email": "seuemail@exemplo.com",
+            "endereco": {
+                "cep": "55012-010",
+                "rua": "Rua Visconde de Inhaúma",
+                "numero": "123",
+                "bairro": "Maurício de Nassau",
+                "cidade": "Caruaru"
+            },
+            "id": 1
+        }
+    ]
 }
