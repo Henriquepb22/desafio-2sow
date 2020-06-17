@@ -2,12 +2,14 @@ import React from "react";
 
 import LoginForm from "../../components/LoginForm";
 
+import * as S from "./styled";
+
 const Login: React.FC = () => {
     return (
-        <div>
-            <h1>Login page</h1>
+        <S.LoginWrapper>
+            <S.LoginTitle>Faça seu Login</S.LoginTitle>
             <LoginForm />
-        </div>
+        </S.LoginWrapper>
     );
 };
 

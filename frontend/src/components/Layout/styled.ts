@@ -7,6 +7,7 @@ export const LayoutWrapper = styled.div`
         "content";
     grid-template-rows: 80px 1fr;
     grid-template-columns: 1fr;
+    min-width: 400px;
 `;
 
 export const ContentContainer = styled.div`

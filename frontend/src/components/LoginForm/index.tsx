@@ -7,6 +7,8 @@ import api from "../../services/api";
 
 import UserContext from "../../store/UserContext";
 
+import * as S from "./styled";
+
 //Segredo do hash
 const secret = "I413T1A_SDFÇT435";
 
@@ -48,11 +50,11 @@ const LoginForm: React.FC = () => {
     }
 
     return (
-        <form onSubmit={(e) => handleLogin(e)}>
+        <S.LoginForm onSubmit={(e) => handleLogin(e)}>
             <ToastContainer />
-            <fieldset>
-                <label htmlFor="email">E-mail:</label>
-                <input
+            <S.LoginFieldSet>
+                <S.LoginLabel htmlFor="email">E-mail</S.LoginLabel>
+                <S.LoginInput
                     type="email"
                     name="email"
                     id="email"
@@ -61,10 +63,8 @@ const LoginForm: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
-            </fieldset>
-            <fieldset>
-                <label htmlFor="senha">Senha:</label>
-                <input
+                <S.LoginLabel htmlFor="senha">Senha</S.LoginLabel>
+                <S.LoginInput
                     type="password"
                     name="senha"
                     id="senha"
@@ -74,11 +74,11 @@ const LoginForm: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-            </fieldset>
-            <button type="submit" disabled={loading}>
+            </S.LoginFieldSet>
+            <S.LoginButton type="submit" disabled={loading}>
                 Entrar
-            </button>
-        </form>
+            </S.LoginButton>
+        </S.LoginForm>
     );
 };
 
