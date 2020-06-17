@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Spinner from "react-bootstrap/Spinner";
 
 import UsersTable from "../../components/UsersTable";
 
 import api from "../../services/api";
+
+import UserContext from "../../store/UserContext";
 
 import * as S from "./styled";
 
@@ -30,13 +33,30 @@ const Dashboard = () => {
     const [isFiltered, setIsFiltered] = useState(false);
     const [actualPage, setActualPage] = useState(1);
     const [total, setTotal] = useState(0);
+    const { loggedUser } = useContext(UserContext);
 
     useEffect(() => {
+        let isSubscribed = true;
         //Carrega a primeira página da lista no carregamento da página
-        loadUsers(1);
+        async function loadFirstTime() {
+            setLoading(true);
+            await api.get("/usuarios?&_page=1").then((res) => {
+                if (isSubscribed) {
+                    setUsuarios(res.data);
+                    setLoading(false);
+                    setTotal(Number(res.headers["x-total-count"]));
+                }
+                return;
+            });
+        }
+        loadFirstTime();
+        //Se sair da página antes da resposta não usa ela
+        return () => {
+            isSubscribed = false;
+        };
     }, []);
 
-    //Carrega todos os usuários
+    //Carrega os usuários da página selecionada
     async function loadUsers(page: number) {
         setLoading(true);
         await api.get(`/usuarios?&_page=${page}`).then((res) => {
@@ -123,7 +143,7 @@ const Dashboard = () => {
     return (
         <S.DashboardWrapper>
             <ToastContainer />
-            <S.DashboardTitle>Lista de Usuários</S.DashboardTitle>
+            <S.DashboardTitle>Bem vindo, {loggedUser.nome}!</S.DashboardTitle>
             <S.SearchForm onSubmit={(e) => searchUser(e)}>
                 <S.SearchField>
                     <S.SearchLabel htmlFor="search">
@@ -157,7 +177,9 @@ const Dashboard = () => {
                 </S.SearchActions>
             </S.SearchForm>
             {loading ? (
-                <S.LoadingText>Carregando...</S.LoadingText>
+                <Spinner animation="border" role="status">
+                    <span className="sr-only">Carregando...</span>
+                </Spinner>
             ) : (
                 <UsersTable
                     usuarios={usuarios}

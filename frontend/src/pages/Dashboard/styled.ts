@@ -96,11 +96,6 @@ export const CancelButton = styled.button`
     }
 `;
 
-export const LoadingText = styled.span`
-    font-size: 1rem;
-    font-weight: bold;
-`;
-
 export const PaginationWrapper = styled.div`
     padding: 0.6rem;
     display: flex;

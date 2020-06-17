@@ -40,7 +40,7 @@ const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
             </S.TableHeader>
             <S.TableBody>
                 {usuarios.map((usuario) => (
-                    <S.BodyRow key={usuario.cpf}>
+                    <S.BodyRow key={usuario.id}>
                         <S.BodyData>{usuario.nome}</S.BodyData>
                         <S.BodyData>{usuario.cpf}</S.BodyData>
                         <S.BodyData>{usuario.email}</S.BodyData>

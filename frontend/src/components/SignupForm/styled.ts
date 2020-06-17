@@ -56,7 +56,7 @@ export const FieldLabel = styled.label`
 `;
 
 export const FieldInput = styled.input`
-    width: calc(100% - 1.6rem);
+    width: 100%;
     padding: 0.4rem 0.8rem;
     border: none;
     border-bottom: 1px solid #777;
@@ -72,7 +72,7 @@ export const FieldInput = styled.input`
 `;
 
 export const FieldWithMask = styled(MaskedInput)`
-    width: calc(100% - 1.6rem);
+    width: 100%;
     padding: 0.4rem 0.8rem;
     border: none;
     border-bottom: 1px solid #777;
@@ -98,6 +98,9 @@ export const SubmitButton = styled.button`
     color: white;
     border-radius: 5px;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
 
     &:focus,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 
 import useQuery from "../../utils/useQuery";
@@ -26,6 +26,12 @@ const SignupForm: React.FC = () => {
 
     useEffect(() => {
         async function handleEdit() {
+            //Da o foco no primeiro input
+            const nameInput = document.getElementById(
+                "nome"
+            ) as HTMLInputElement;
+            nameInput.focus();
+
             //Transforma a tela no modo de edição se receber algum id pela url
             if (userId !== null) {
                 setIsEdit(true);
@@ -133,6 +139,10 @@ const SignupForm: React.FC = () => {
                 exibe um toast, limpa os campos e muda a propriedade loading. 
                 */
                 if (res.status === 201) {
+                    const nameInput = document.getElementById(
+                        "nome"
+                    ) as HTMLInputElement;
+                    nameInput.focus();
                     cleanFields();
                     setLoading(false);
                     return toast.success(`${nome} cadastrado com sucesso!`, {
@@ -162,7 +172,13 @@ const SignupForm: React.FC = () => {
         setBairro("");
         setCidade("");
     }
-
+    if (isEdit && loading) {
+        return (
+            <Spinner animation="border" role="status">
+                <span className="sr-only">Carregando...</span>
+            </Spinner>
+        );
+    }
     return (
         <S.SignupForm onSubmit={(e) => handleUser(e)}>
             <ToastContainer />
@@ -199,6 +215,8 @@ const SignupForm: React.FC = () => {
                     id="cpf"
                     placeholder="CPF do usuário"
                     value={cpf}
+                    guide={false}
+                    minLength={14}
                     onChange={(e) => setCpf(e.target.value)}
                     required
                 />
@@ -221,6 +239,8 @@ const SignupForm: React.FC = () => {
                     id="cep"
                     placeholder="Ex: 12345-678"
                     value={cep}
+                    guide={false}
+                    minLength={9}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setCep(e.target.value)
                     }
@@ -264,7 +284,15 @@ const SignupForm: React.FC = () => {
                 />
             </S.UserAddress>
             <S.SubmitButton type="submit" disabled={loading}>
-                {isEdit ? "Salvar" : "Cadastrar"}
+                {loading ? (
+                    <Spinner animation="border" role="status">
+                        <span className="sr-only">Carregando...</span>
+                    </Spinner>
+                ) : isEdit ? (
+                    "Salvar"
+                ) : (
+                    "Cadastrar"
+                )}
             </S.SubmitButton>
         </S.SignupForm>
     );
