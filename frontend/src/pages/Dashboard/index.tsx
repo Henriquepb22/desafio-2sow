@@ -5,6 +5,8 @@ import UsersTable from "../../components/UsersTable";
 
 import api from "../../services/api";
 
+import * as S from "./styled";
+
 type Usuario = {
     id: number;
     nome: string;
@@ -119,32 +121,43 @@ const Dashboard = () => {
     }
 
     return (
-        <div>
+        <S.DashboardWrapper>
             <ToastContainer />
-            <h1>Lista de Usuários</h1>
-            <form onSubmit={(e) => searchUser(e)}>
-                <label htmlFor="search">Buscar por nome:</label>
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Digite um nome"
-                    value={searchName}
-                    onChange={(e) => setSearchName(e.target.value)}
-                    required
-                />
-                <button type="submit" disabled={loading}>
-                    Buscar
-                </button>
-                <button
-                    type="reset"
-                    disabled={loading || !isFiltered}
-                    onClick={cleanFilter}
-                >
-                    Limpar Filtro
-                </button>
-            </form>
+            <S.DashboardTitle>Lista de Usuários</S.DashboardTitle>
+            <S.SearchForm onSubmit={(e) => searchUser(e)}>
+                <S.SearchField>
+                    <S.SearchLabel htmlFor="search">
+                        Buscar por nome:
+                    </S.SearchLabel>
+                    <S.SearchInput
+                        type="text"
+                        id="search"
+                        placeholder="Digite um nome para buscar"
+                        value={searchName}
+                        onChange={(e) => setSearchName(e.target.value)}
+                        required
+                    />
+                </S.SearchField>
+                <S.SearchActions>
+                    <S.SearchButton
+                        type="submit"
+                        disabled={loading}
+                        title="Buscar"
+                    >
+                        Buscar
+                    </S.SearchButton>
+                    <S.CancelButton
+                        type="reset"
+                        disabled={loading || !isFiltered}
+                        onClick={cleanFilter}
+                        title="Limpar Filtro"
+                    >
+                        Limpar Filtro
+                    </S.CancelButton>
+                </S.SearchActions>
+            </S.SearchForm>
             {loading ? (
-                <h2>Carregando...</h2>
+                <S.LoadingText>Carregando...</S.LoadingText>
             ) : (
                 <UsersTable
                     usuarios={usuarios}
@@ -189,7 +202,7 @@ const Dashboard = () => {
                     Última
                 </button>
             </div>
-        </div>
+        </S.DashboardWrapper>
     );
 };
 

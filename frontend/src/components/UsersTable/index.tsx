@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import * as S from "./styled";
+
 type TableProps = {
     usuarios: Usuario[];
     onDelete: (id: number, email: string) => void;
@@ -25,16 +27,16 @@ type Endereco = {
 
 const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
     return (
-        <table>
-            <thead>
+        <S.UsersTable>
+            <S.TableHeader>
                 <tr>
-                    <td>Nome</td>
-                    <td>CPF</td>
-                    <td>Email</td>
-                    <td>Cidade</td>
-                    <td>Ações</td>
+                    <S.HeaderData>Nome</S.HeaderData>
+                    <S.HeaderData>CPF</S.HeaderData>
+                    <S.HeaderData>Email</S.HeaderData>
+                    <S.HeaderData>Cidade</S.HeaderData>
+                    <S.HeaderData>Ações</S.HeaderData>
                 </tr>
-            </thead>
+            </S.TableHeader>
             <tbody>
                 {usuarios.map((usuario) => (
                     <tr key={usuario.cpf}>
@@ -44,8 +46,6 @@ const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
                         <td>{usuario.endereco.cidade}</td>
                         <td>
                             <Link to={`/signup?id=${usuario.id}`}>Editar</Link>
-                        </td>
-                        <td>
                             <button
                                 onClick={() =>
                                     onDelete(usuario.id, usuario.email)
@@ -58,7 +58,7 @@ const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
                     </tr>
                 ))}
             </tbody>
-        </table>
+        </S.UsersTable>
     );
 };
 
