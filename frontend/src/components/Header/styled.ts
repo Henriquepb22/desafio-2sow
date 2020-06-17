@@ -5,12 +5,15 @@ export const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #bdc3c7;
+    background: #3d6cb9;
+    box-shadow: 0 1px 7px 1px #3d6cb9;
 `;
 
 export const HeaderTitle = styled.h1`
-    font-size: 2rem;
     margin-left: 2.2rem;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
 `;
 
 export const HeaderNav = styled.nav`
@@ -23,4 +26,11 @@ export const HeaderList = styled.ul`
 
 export const HeaderLinks = styled.li`
     margin: 0 0.8rem;
+
+    a {
+        padding: 0.6rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+    }
 `;

@@ -59,6 +59,7 @@ const LoginForm: React.FC = () => {
                     name="email"
                     id="email"
                     placeholder="seuemail@exemplo.com"
+                    title="E-mail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -70,6 +71,7 @@ const LoginForm: React.FC = () => {
                     id="senha"
                     minLength={5}
                     placeholder="Insira sua senha"
+                    title="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required

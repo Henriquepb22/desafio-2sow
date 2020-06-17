@@ -7,7 +7,7 @@ import * as S from "./styled";
 const Login: React.FC = () => {
     return (
         <S.LoginWrapper>
-            <S.LoginTitle>Faça seu Login</S.LoginTitle>
+            <S.LoginTitle>Dados do Usuário</S.LoginTitle>
             <LoginForm />
         </S.LoginWrapper>
     );

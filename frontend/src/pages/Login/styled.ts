@@ -5,6 +5,7 @@ export const LoginWrapper = styled.div`
     padding: 1rem;
     border-bottom: 1px solid #ccc;
     box-shadow: none;
+    box-shadow: 0px 4px 8px -1px #ccc;
 
     @media (min-width: 576px) {
         margin-top: 2rem;

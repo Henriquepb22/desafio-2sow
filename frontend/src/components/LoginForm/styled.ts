@@ -29,6 +29,8 @@ export const LoginInput = styled.input`
     padding: 0.4rem 0.8rem;
     border: none;
     border-bottom: 1px solid #999;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     font-size: 1rem;
 
     @media (min-width: 992px) {
@@ -42,16 +44,22 @@ export const LoginButton = styled.button`
     height: 40px;
     border-radius: 5px;
     border: none;
-    background: #3d6cb9;
+    background: #00d1ff;
     color: white;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
     transition: opacity 0.4s;
 
     &:hover,
     &:focus {
         transition: opacity 0.4s;
-        opacity: 0.8;
+        opacity: 0.5;
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.3;
     }
 
     @media (min-width: 992px) {

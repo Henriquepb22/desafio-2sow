@@ -37,7 +37,7 @@ const Header: React.FC = () => {
                         </>
                     ) : (
                         <S.HeaderLinks>
-                            <Link to="/">Faça seu Login</Link>
+                            <Link to="/">Realize seu Login</Link>
                         </S.HeaderLinks>
                     )}
                 </S.HeaderList>
