@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MaskedInput from "react-text-mask";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -7,6 +6,8 @@ import axios from "axios";
 import useQuery from "../../utils/useQuery";
 
 import api from "../../services/api";
+
+import * as S from "./styled";
 
 const SignupForm: React.FC = () => {
     const [nome, setNome] = useState("");
@@ -132,19 +133,22 @@ const SignupForm: React.FC = () => {
                 exibe um toast, limpa os campos e muda a propriedade loading. 
                 */
                 if (res.status === 201) {
-                    toast.success(`${nome} cadastrado com sucesso!`, {
-                        autoClose: 2000,
-                    });
                     cleanFields();
                     setLoading(false);
+                    return toast.success(`${nome} cadastrado com sucesso!`, {
+                        autoClose: 2000,
+                    });
                 }
             })
             .catch(() => {
                 // Caso haja um erro na api retorna um toast com a mensagem de erro.
-                toast.error("Ocorreu um erro no requisição, tente novamente", {
-                    autoClose: 2000,
-                });
                 setLoading(false);
+                return toast.error(
+                    "Ocorreu um erro no requisição, tente novamente",
+                    {
+                        autoClose: 2000,
+                    }
+                );
             });
     }
 
@@ -160,53 +164,70 @@ const SignupForm: React.FC = () => {
     }
 
     return (
-        <form onSubmit={(e) => handleUser(e)}>
+        <S.SignupForm onSubmit={(e) => handleUser(e)}>
             <ToastContainer />
-            <fieldset>
-                <legend>Dados Pessoais:</legend>
-                <label htmlFor="nome">Nome:</label>
-                <input
+            <S.UserData>
+                <S.FieldLegend>Dados Pessoais</S.FieldLegend>
+                <S.FieldLabel htmlFor="nome">Nome</S.FieldLabel>
+                <S.FieldInput
                     type="text"
                     id="nome"
-                    placeholder="Insira seu nome"
+                    placeholder="Nome do usuário"
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     required
                 />
-                <label htmlFor="cpf">CPF:</label>
-                <input
+                <S.FieldLabel htmlFor="cpf">CPF</S.FieldLabel>
+                <S.FieldWithMask
+                    mask={[
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/,
+                    ]}
                     type="text"
                     id="cpf"
-                    placeholder="Insira seu CPF"
+                    placeholder="CPF do usuário"
                     value={cpf}
-                    maxLength={11}
                     onChange={(e) => setCpf(e.target.value)}
                     required
                 />
-                <label htmlFor="email">E-mail:</label>
-                <input
+                <S.FieldLabel htmlFor="email">E-mail</S.FieldLabel>
+                <S.FieldInput
                     type="email"
                     id="email"
-                    placeholder="Insira seu e-mail"
+                    placeholder="E-mail do usuário"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
-            </fieldset>
-            <fieldset>
-                <legend>Endereço:</legend>
-                <label htmlFor="cep">CEP:</label>
-                <MaskedInput
+            </S.UserData>
+            <S.UserAddress>
+                <S.FieldLegend>Endereço</S.FieldLegend>
+                <S.FieldLabel htmlFor="cep">CEP</S.FieldLabel>
+                <S.FieldWithMask
                     mask={[/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/]}
                     type="text"
                     id="cep"
                     placeholder="Ex: 12345-678"
                     value={cep}
-                    onChange={(e) => setCep(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setCep(e.target.value)
+                    }
                     required
                 />
-                <label htmlFor="rua">Rua:</label>
-                <input
+                <S.FieldLabel htmlFor="rua">Rua</S.FieldLabel>
+                <S.FieldInput
                     type="text"
                     id="rua"
                     placeholder="Ex: Avenida Paulista"
@@ -214,8 +235,8 @@ const SignupForm: React.FC = () => {
                     onChange={(e) => setRua(e.target.value)}
                     required
                 />
-                <label htmlFor="numero">Número:</label>
-                <input
+                <S.FieldLabel htmlFor="numero">Número</S.FieldLabel>
+                <S.FieldInput
                     type="text"
                     id="numero"
                     placeholder="Ex: 123A"
@@ -223,8 +244,8 @@ const SignupForm: React.FC = () => {
                     onChange={(e) => setNumero(e.target.value)}
                     required
                 />
-                <label htmlFor="bairro">Bairro:</label>
-                <input
+                <S.FieldLabel htmlFor="bairro">Bairro</S.FieldLabel>
+                <S.FieldInput
                     type="text"
                     id="bairro"
                     placeholder="Ex: Centro"
@@ -232,8 +253,8 @@ const SignupForm: React.FC = () => {
                     onChange={(e) => setBairro(e.target.value)}
                     required
                 />
-                <label htmlFor="cidade">Cidade:</label>
-                <input
+                <S.FieldLabel htmlFor="cidade">Cidade</S.FieldLabel>
+                <S.FieldInput
                     type="text"
                     id="cidade"
                     placeholder="Ex: São Paulo"
@@ -241,11 +262,11 @@ const SignupForm: React.FC = () => {
                     onChange={(e) => setCidade(e.target.value)}
                     required
                 />
-            </fieldset>
-            <button type="submit" disabled={loading}>
+            </S.UserAddress>
+            <S.SubmitButton type="submit" disabled={loading}>
                 {isEdit ? "Salvar" : "Cadastrar"}
-            </button>
-        </form>
+            </S.SubmitButton>
+        </S.SignupForm>
     );
 };
 

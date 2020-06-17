@@ -2,11 +2,13 @@ import React from "react";
 
 import SignupForm from "../../components/SignupForm";
 
+import * as S from "./styled";
+
 const Signup: React.FC = () => {
     return (
-        <div>
+        <S.SignupWrapper>
             <SignupForm />
-        </div>
+        </S.SignupWrapper>
     );
 };
 
