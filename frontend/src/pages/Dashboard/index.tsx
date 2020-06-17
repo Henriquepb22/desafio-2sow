@@ -92,32 +92,32 @@ const Dashboard = () => {
     function handleFirstPage() {
         const firstPage = 1;
         if (searchName === "") {
-            loadUsers(firstPage);
+            return loadUsers(firstPage);
         }
-        loadFilteredUsers(firstPage);
+        return loadFilteredUsers(firstPage);
     }
 
     function handleLastPage() {
         const lastPage =
             total % 10 !== 0 ? Math.trunc(total / 10) + 1 : total / 10;
         if (searchName === "") {
-            loadUsers(lastPage);
+            return loadUsers(lastPage);
         }
-        loadFilteredUsers(lastPage);
+        return loadFilteredUsers(lastPage);
     }
 
     function handleNextPage() {
         if (searchName === "") {
-            loadUsers(actualPage + 1);
+            return loadUsers(actualPage + 1);
         }
-        loadFilteredUsers(actualPage + 1);
+        return loadFilteredUsers(actualPage + 1);
     }
 
     function handlePrevPage() {
         if (searchName === "") {
-            loadUsers(actualPage - 1);
+            return loadUsers(actualPage - 1);
         }
-        loadFilteredUsers(actualPage - 1);
+        return loadFilteredUsers(actualPage - 1);
     }
 
     return (
@@ -165,43 +165,45 @@ const Dashboard = () => {
                     loading={loading}
                 />
             )}
-            <div>
-                <span>
+            <S.PaginationWrapper>
+                <S.PaginationText>
                     Página {actualPage} de{" "}
                     {total
                         ? total % 10 !== 0
                             ? Math.trunc(total / 10) + 1
                             : total / 10
                         : 1}
-                </span>
-                <span>Total de registros: {total}</span>
-            </div>
-            <div>
-                <button
+                </S.PaginationText>
+                <S.TotalText>
+                    Total de registros: <S.TotalCount>{total}</S.TotalCount>
+                </S.TotalText>
+            </S.PaginationWrapper>
+            <S.PaginationActions>
+                <S.PaginationButtons
                     disabled={actualPage === 1 || loading}
                     onClick={handleFirstPage}
                 >
                     Primeira
-                </button>
-                <button
+                </S.PaginationButtons>
+                <S.PaginationButtons
                     disabled={actualPage === 1 || loading}
                     onClick={handlePrevPage}
                 >
                     Anterior
-                </button>
-                <button
+                </S.PaginationButtons>
+                <S.PaginationButtons
                     disabled={total / 10 <= actualPage || loading}
                     onClick={handleNextPage}
                 >
                     Próxima
-                </button>
-                <button
+                </S.PaginationButtons>
+                <S.PaginationButtons
                     disabled={total / 10 <= actualPage || loading}
                     onClick={handleLastPage}
                 >
                     Última
-                </button>
-            </div>
+                </S.PaginationButtons>
+            </S.PaginationActions>
         </S.DashboardWrapper>
     );
 };
