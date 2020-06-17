@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Spinner from "react-bootstrap/Spinner";
 import crypto from "crypto";
 
 import api from "../../services/api";
@@ -78,7 +78,13 @@ const LoginForm: React.FC = () => {
                 />
             </S.LoginFieldSet>
             <S.LoginButton type="submit" disabled={loading}>
-                Entrar
+                {loading ? (
+                    <Spinner animation="border" role="status">
+                        <span className="sr-only">Carregando...</span>
+                    </Spinner>
+                ) : (
+                    "Entrar"
+                )}
             </S.LoginButton>
         </S.LoginForm>
     );

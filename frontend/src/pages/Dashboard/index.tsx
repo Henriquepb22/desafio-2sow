@@ -143,8 +143,10 @@ const Dashboard = () => {
     return (
         <S.DashboardWrapper>
             <ToastContainer />
-            <S.DashboardTitle>Bem vindo, {loggedUser.nome}!</S.DashboardTitle>
-            <S.SearchForm onSubmit={(e) => searchUser(e)}>
+            <S.DashboardTitle title="Bem vindo">
+                Bem vindo, {loggedUser.nome}!
+            </S.DashboardTitle>
+            <S.SearchForm role="form" onSubmit={(e) => searchUser(e)}>
                 <S.SearchField>
                     <S.SearchLabel htmlFor="search">
                         Buscar por nome:

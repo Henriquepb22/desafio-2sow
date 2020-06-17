@@ -25,7 +25,7 @@ export const LoginLabel = styled.label`
 `;
 
 export const LoginInput = styled.input`
-    width: calc(100% - 1.6rem);
+    width: 100%;
     padding: 0.4rem 0.8rem;
     border: none;
     border-bottom: 1px solid #999;

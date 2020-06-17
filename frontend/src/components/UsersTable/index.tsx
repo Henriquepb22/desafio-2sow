@@ -28,7 +28,7 @@ type Endereco = {
 
 const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
     return (
-        <S.UsersTable>
+        <S.UsersTable role="table">
             <S.TableHeader>
                 <S.HeaderRow>
                     <S.HeaderData>Nome</S.HeaderData>
@@ -39,30 +39,38 @@ const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
                 </S.HeaderRow>
             </S.TableHeader>
             <S.TableBody>
-                {usuarios.map((usuario) => (
-                    <S.BodyRow key={usuario.id}>
-                        <S.BodyData>{usuario.nome}</S.BodyData>
-                        <S.BodyData>{usuario.cpf}</S.BodyData>
-                        <S.BodyData>{usuario.email}</S.BodyData>
-                        <S.BodyData>{usuario.endereco.cidade}</S.BodyData>
-                        <S.BodyActions>
-                            <S.EditContainer title="Editar">
-                                <Link to={`/signup?id=${usuario.id}`}>
-                                    <EditAlt size={25} color="#fff" />
-                                </Link>
-                            </S.EditContainer>
-                            <S.DeleteButton
-                                title="Excluir"
-                                onClick={() =>
-                                    onDelete(usuario.id, usuario.email)
-                                }
-                                disabled={loading}
-                            >
-                                <Eraser size={25} color="#fff" />
-                            </S.DeleteButton>
-                        </S.BodyActions>
+                {usuarios.length >= 1 ? (
+                    usuarios.map((usuario) => (
+                        <S.BodyRow key={usuario.id}>
+                            <S.BodyData>{usuario.nome}</S.BodyData>
+                            <S.BodyData>{usuario.cpf}</S.BodyData>
+                            <S.BodyData>{usuario.email}</S.BodyData>
+                            <S.BodyData>{usuario.endereco.cidade}</S.BodyData>
+                            <S.BodyActions>
+                                <S.EditContainer title="Editar">
+                                    <Link to={`/signup?id=${usuario.id}`}>
+                                        <EditAlt size={25} color="#fff" />
+                                    </Link>
+                                </S.EditContainer>
+                                <S.DeleteButton
+                                    title="Excluir"
+                                    onClick={() =>
+                                        onDelete(usuario.id, usuario.email)
+                                    }
+                                    disabled={loading}
+                                >
+                                    <Eraser size={25} color="#fff" />
+                                </S.DeleteButton>
+                            </S.BodyActions>
+                        </S.BodyRow>
+                    ))
+                ) : (
+                    <S.BodyRow>
+                        <S.BodyData colSpan={5}>
+                            Nenhum usuário encontrado
+                        </S.BodyData>
                     </S.BodyRow>
-                ))}
+                )}
             </S.TableBody>
         </S.UsersTable>
     );
