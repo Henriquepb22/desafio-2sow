@@ -1,4 +1,5 @@
 import React from "react";
+import { EditAlt, Eraser } from "styled-icons/boxicons-solid";
 import { Link } from "react-router-dom";
 
 import * as S from "./styled";
@@ -29,35 +30,40 @@ const UsersTable: React.FC<TableProps> = ({ usuarios, onDelete, loading }) => {
     return (
         <S.UsersTable>
             <S.TableHeader>
-                <tr>
+                <S.HeaderRow>
                     <S.HeaderData>Nome</S.HeaderData>
                     <S.HeaderData>CPF</S.HeaderData>
                     <S.HeaderData>Email</S.HeaderData>
                     <S.HeaderData>Cidade</S.HeaderData>
                     <S.HeaderData>Ações</S.HeaderData>
-                </tr>
+                </S.HeaderRow>
             </S.TableHeader>
-            <tbody>
+            <S.TableBody>
                 {usuarios.map((usuario) => (
-                    <tr key={usuario.cpf}>
-                        <td>{usuario.nome}</td>
-                        <td>{usuario.cpf}</td>
-                        <td>{usuario.email}</td>
-                        <td>{usuario.endereco.cidade}</td>
-                        <td>
-                            <Link to={`/signup?id=${usuario.id}`}>Editar</Link>
-                            <button
+                    <S.BodyRow key={usuario.cpf}>
+                        <S.BodyData>{usuario.nome}</S.BodyData>
+                        <S.BodyData>{usuario.cpf}</S.BodyData>
+                        <S.BodyData>{usuario.email}</S.BodyData>
+                        <S.BodyData>{usuario.endereco.cidade}</S.BodyData>
+                        <S.BodyActions>
+                            <S.EditContainer title="Editar">
+                                <Link to={`/signup?id=${usuario.id}`}>
+                                    <EditAlt size={25} color="#fff" />
+                                </Link>
+                            </S.EditContainer>
+                            <S.DeleteButton
+                                title="Excluir"
                                 onClick={() =>
                                     onDelete(usuario.id, usuario.email)
                                 }
                                 disabled={loading}
                             >
-                                Excluir
-                            </button>
-                        </td>
-                    </tr>
+                                <Eraser size={25} color="#fff" />
+                            </S.DeleteButton>
+                        </S.BodyActions>
+                    </S.BodyRow>
                 ))}
-            </tbody>
+            </S.TableBody>
         </S.UsersTable>
     );
 };
